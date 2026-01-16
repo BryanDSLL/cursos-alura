@@ -1,36 +1,45 @@
 const fs = require("fs");
+const path = require("path");
 
 function getTodosLivros() {
-    return JSON.parse(fs.readFileSync("livros.json"))
+    const caminhoLivros = path.join(__dirname, "../livros.json");
+    return JSON.parse(fs.readFileSync(caminhoLivros))
 };
 
 function getLivroPorId(id) {
-    const livros = JSON.parse(fs.readFileSync("livros.json"))
-    const livroFiltrado = livros.filter( livro => livro.id === id ) [0]
+    const caminhoLivros = path.join(__dirname, "../livros.json");
+    const livros = JSON.parse(fs.readFileSync(caminhoLivros))
+    const idNumero = Number(id);
+    const livroFiltrado = livros.filter(livro => livro.id === idNumero)[0]
     return livroFiltrado
 };
 
 function insereLivro(livroNovo) {
-    const livros = JSON.parse(fs.readFileSync("livros.json"))
+    const caminhoLivros = path.join(__dirname, "../livros.json");
+    const livros = JSON.parse(fs.readFileSync(caminhoLivros))
     const novaLista = [ ...livros, livroNovo ]
-    fs.writeFileSync("livros.json", JSON.stringify(novaLista));
+    fs.writeFileSync(caminhoLivros, JSON.stringify(novaLista));
 }
 
 function editaLivroPorId(modificacoes, id) {
-    let livros = JSON.parse(fs.readFileSync("livros.json"))
-    const indiceLivro = livros.findIndex(livro => livro.id === id)
+    const caminhoLivros = path.join(__dirname, "../livros.json");
+    let livros = JSON.parse(fs.readFileSync(caminhoLivros))
+    const idNumero = Number(id);
+    const indiceLivro = livros.findIndex(livro => livro.id === idNumero)
     const livroAlterado = { ...livros[indiceLivro], ...modificacoes }
 
     livros[indiceLivro] = livroAlterado
 
-    fs.writeFileSync("livros.json", JSON.stringify(livros))
+    fs.writeFileSync(caminhoLivros, JSON.stringify(livros))
 };
 
 function deletaLivroPorId(id) {
-    let livros = JSON.parse(fs.readFileSync("livros.json"))
-    const indiceLivro = livros.findIndex(livro => livro.id === id)
+    const caminhoLivros = path.join(__dirname, "../livros.json");
+    let livros = JSON.parse(fs.readFileSync(caminhoLivros))
+    const idNumero = Number(id);
+    const indiceLivro = livros.findIndex(livro => livro.id === idNumero)
     livros.splice(indiceLivro, 1);
-    fs.writeFileSync("livros.json", JSON.stringify(livros))
+    fs.writeFileSync(caminhoLivros, JSON.stringify(livros))
 };
 
 module.exports = {

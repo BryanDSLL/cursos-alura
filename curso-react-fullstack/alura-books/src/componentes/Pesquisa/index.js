@@ -3,6 +3,7 @@ import Input from '../Input'
 import styled from 'styled-components'
 import { getLivros } from '../../servicos/livros'
 import { useEffect } from 'react'
+import { postFavorito } from '../../servicos/favoritos'
 
 
 const PesquisaContainer = styled.section`
@@ -10,7 +11,7 @@ const PesquisaContainer = styled.section`
         color: #FFF;
         text-align: center;
         padding: 85px 0;
-        height: 270px;
+        min-height: 270px;
         width: 100%;
 `
 const Titulo = styled.h2`
@@ -25,17 +26,42 @@ const Subtitulo = styled.h3`
         margin-bottom: 40px;
 `
 
+const Resultado = styled.div`
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 20px 0;
+        cursor: pointer;
+        text-align: center;
+        padding: 0 100px;
+        p {
+                width: 200px;
+                color: #FFF;
+        }
+        img {
+                width: 100px;
+        }
+        &:hover {
+                border: 1px solid white;
+        }
+`
+
 function Pesquisa() {
 
     const [livrosPesquisados, setLivrosPesquisados] = useState([]);
     const [livros, setLivros] = useState([]);
+
+    useEffect(() => { fetchLivros() }, []);
 
     async function fetchLivros() {
         const LivrosAPI = await getLivros()
         setLivros(LivrosAPI)
     }
 
-    useEffect(() => { fetchLivros() }, []);
+    async function insertFavorito(id) {
+        await postFavorito(id)
+        alert(`Livro de id:${id} inserido!`)
+    }
 
     return (
         <PesquisaContainer>
@@ -51,10 +77,10 @@ function Pesquisa() {
             />
 
             {livrosPesquisados.map(livros => (
-                <div>
+                <Resultado key={livros.id} onClick={() => insertFavorito(livros.id)}>
                     <p>{livros.nome}</p>
                     <img src={livros.src} />
-                </div>
+                </Resultado>
             ))}
 
         </PesquisaContainer>

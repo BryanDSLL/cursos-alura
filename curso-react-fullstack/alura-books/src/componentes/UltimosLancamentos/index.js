@@ -44,7 +44,7 @@ function UltimosLancamentos() {
 
         <LivrosContainer>
         {dadosUltimosLancamentos.map( livro => (
-            <img src={livro.src} alt={livro.nome} />
+            <img src={livro.src} alt={livro.nome} key={livro.id} />
         ))}
         </LivrosContainer>
 
